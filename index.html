@@ -638,10 +638,10 @@
             { name: 'Negev', type: 'Machine Gun', rarity: 'consumer-grade', imageName: 'negev.webp' },
             
             // Knife and Gloves
-            { name: 'Knife', type: 'Knife', rarity: 'consumer-grade', imageName: 'knifet.webp' },
-            { name: 'Knife', type: 'Knife', rarity: 'consumer-grade', imageName: 'knifect.webp' },
-            { name: 'Default T Gloves', type: 'Gloves', rarity: 'consumer-grade', imageName: 'glovest.webp', imageScale: 1.25, offsetX: 7.5, offsetY: 7.5 },
-            { name: 'Default CT Gloves', type: 'Gloves', rarity: 'consumer-grade', imageName: 'glovesct.webp' },
+            { name: 'Knife', type: 'Knife', rarity: 'consumer-grade', imageName: 'knifet.webp', brightness: 0.5 },
+            { name: 'Knife', type: 'Knife', rarity: 'consumer-grade', imageName: 'knifect.webp', brightness: 0.5 },
+            { name: 'Default T Gloves', type: 'Gloves', rarity: 'consumer-grade', imageName: 'glovest.webp', imageScale: 1.25, offsetX: 7.5, offsetY: 7.5, brightness: 0.75 },
+            { name: 'Default CT Gloves', type: 'Gloves', rarity: 'consumer-grade', imageName: 'glovesct.webp', brightness: 0.75 },
         ];
 
         const inventoryGrid = document.getElementById('inventoryGrid');
@@ -690,6 +690,8 @@
             card.className = `item-card ${item.rarity}`;
             
             let imageStyle = '';
+            const styles = [];
+            
             if (item.imageScale || item.offsetX || item.offsetY) {
                 const transforms = [];
                 if (item.imageScale) transforms.push(`scale(${item.imageScale})`);
@@ -698,7 +700,15 @@
                     const y = item.offsetY || 0;
                     transforms.push(`translate(${x}px, ${y}px)`);
                 }
-                imageStyle = `style="transform: ${transforms.join(' ')};"`;
+                styles.push(`transform: ${transforms.join(' ')}`);
+            }
+            
+            if (item.brightness) {
+                styles.push(`filter: brightness(${item.brightness})`);
+            }
+            
+            if (styles.length > 0) {
+                imageStyle = `style="${styles.join('; ')};"`;
             }
             
             card.innerHTML = `
@@ -842,7 +852,9 @@
             // Update weapon image in modal - centered
             const modalDisplay = document.getElementById('modalWeaponEmoji');
             // Make knives and gloves 2x bigger in modal
+            const modalStyles = [];
             const transforms = [];
+            
             if (item.type === 'Knife' || item.type === 'Gloves') {
                 transforms.push('scale(2)');
             } else if (item.imageScale) {
@@ -853,8 +865,17 @@
                 const y = item.offsetY || 0;
                 transforms.push(`translate(${x}px, ${y}px)`);
             }
-            const modalTransform = transforms.length > 0 ? `transform: ${transforms.join(' ')};` : '';
-            modalDisplay.innerHTML = `<img src="images/weapons/${item.imageName}" alt="${item.name}" style="max-width: 70%; max-height: 70%; object-fit: contain; display: block; margin: auto; ${modalTransform}">`;
+            
+            if (transforms.length > 0) {
+                modalStyles.push(`transform: ${transforms.join(' ')}`);
+            }
+            
+            if (item.brightness) {
+                modalStyles.push(`filter: brightness(${item.brightness})`);
+            }
+            
+            const modalStyleStr = modalStyles.length > 0 ? modalStyles.join('; ') + ';' : '';
+            modalDisplay.innerHTML = `<img src="images/weapons/${item.imageName}" alt="${item.name}" style="max-width: 70%; max-height: 70%; object-fit: contain; display: block; margin: auto; ${modalStyleStr}">`;
 
             // Update rarity bar color
             const rarityBar = document.getElementById('modalRarityBar');
