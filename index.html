@@ -423,6 +423,34 @@
             border-color: rgba(255, 255, 255, 0.5);
         }
 
+        /* Tab Content Sections */
+        .tab-content {
+            display: none;
+            min-height: calc(100vh - 200px);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .version-text {
+            font-size: 120px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.15);
+            text-align: center;
+            padding-top: 200px;
+            letter-spacing: 10px;
+        }
+
+        .coming-soon {
+            font-size: 32px;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+            padding-top: 200px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
         @media (max-width: 1200px) {
             .inventory-grid {
                 grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -473,9 +501,29 @@
         </div>
     </div>
 
-    <!-- Inventory Grid -->
-    <div class="inventory-container">
-        <div class="inventory-grid" id="inventoryGrid"></div>
+    <!-- Tab Content Sections -->
+    
+    <!-- Inventory Tab (Active by default) -->
+    <div class="tab-content active" id="inventoryTab">
+        <!-- Inventory Grid -->
+        <div class="inventory-container">
+            <div class="inventory-grid" id="inventoryGrid"></div>
+        </div>
+    </div>
+
+    <!-- Store Tab -->
+    <div class="tab-content" id="storeTab">
+        <div class="coming-soon">Coming Soon</div>
+    </div>
+
+    <!-- News Tab -->
+    <div class="tab-content" id="newsTab">
+        <div class="coming-soon">Coming Soon</div>
+    </div>
+
+    <!-- Info Tab -->
+    <div class="tab-content" id="infoTab">
+        <div class="version-text">v1.0</div>
     </div>
 
     <!-- Inspection Modal -->
@@ -777,11 +825,25 @@
         // Update on window resize
         window.addEventListener('resize', updateNavIndicator);
         
+        // Tab switching functionality
         mainNavItems.forEach(item => {
             item.addEventListener('click', function() {
+                // Update active nav item
                 mainNavItems.forEach(i => i.classList.remove('active'));
                 this.classList.add('active');
                 updateNavIndicator();
+                
+                // Switch tab content
+                const tabName = this.getAttribute('data-nav');
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // Show the selected tab
+                const targetTab = document.getElementById(tabName + 'Tab');
+                if (targetTab) {
+                    targetTab.classList.add('active');
+                }
             });
         });
     </script>
