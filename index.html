@@ -58,24 +58,29 @@
             font-weight: 600;
             letter-spacing: 2px;
             cursor: pointer;
-            padding: 10px 20px;
+            padding: 10px 0px;
             transition: all 0.2s;
             text-transform: uppercase;
             position: relative;
         }
 
-        .main-nav-item.active {
-            color: #5cb3e0;
-        }
-
-        /* Sliding underline indicator */
-        .nav-indicator {
+        .main-nav-item::after {
+            content: '';
             position: absolute;
-            bottom: 0;
+            bottom: -20px;
+            left: 0;
+            right: 0;
             height: 2px;
             background: #5cb3e0;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
+            opacity: 0;
+        }
+
+        .main-nav-item.active::after {
+            opacity: 1;
+        }
+
+        .main-nav-item.active {
+            color: #5cb3e0;
         }
 
         .main-nav-item:hover:not(.active) {
@@ -84,13 +89,17 @@
 
         /* Sub Navigation */
         .sub-nav {
-            display: flex;
+            display: none;
             gap: 5px;
             padding: 20px 40px;
             background: rgba(0, 0, 0, 0.2);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             justify-content: flex-end;
             align-items: center;
+        }
+
+        .sub-nav.active {
+            display: flex;
         }
 
         .sub-nav-right {
@@ -223,7 +232,8 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
+            margin-bottom: 30px;
         }
 
         .item-card:hover {
@@ -234,31 +244,31 @@
 
         /* Rarity borders */
         .item-card.consumer-grade {
-            border-bottom: 3px solid #b0c3d9;
+            border-bottom: 4.5px solid #b0c3d9;
         }
 
         .item-card.industrial-grade {
-            border-bottom: 3px solid #5e98d9;
+            border-bottom: 4.5px solid #5e98d9;
         }
 
         .item-card.mil-spec {
-            border-bottom: 3px solid #4b69ff;
+            border-bottom: 4.5px solid #4b69ff;
         }
 
         .item-card.restricted {
-            border-bottom: 3px solid #8847ff;
+            border-bottom: 4.5px solid #8847ff;
         }
 
         .item-card.classified {
-            border-bottom: 3px solid #d32ce6;
+            border-bottom: 4.5px solid #d32ce6;
         }
 
         .item-card.covert {
-            border-bottom: 3px solid #eb4b4b;
+            border-bottom: 4.5px solid #eb4b4b;
         }
 
         .item-card.extraordinary {
-            border-bottom: 3px solid #e4ae39;
+            border-bottom: 4.5px solid #e4ae39;
         }
 
         .item-image-container {
@@ -277,24 +287,25 @@
         }
 
         .item-info {
-            margin-top: auto;
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            text-align: left;
         }
 
         .item-name {
             font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 2px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            padding: 0 5px;
         }
 
         .item-type {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.6);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            display: none;
         }
 
         /* Modal/Inspection View */
@@ -360,13 +371,33 @@
 
         .rarity-bar {
             width: 200px;
-            height: 3px;
+            height: 4.5px;
             margin: 15px auto 0;
             border-radius: 2px;
         }
 
         .rarity-bar.consumer-grade {
             background: #b0c3d9;
+        }
+
+        .rarity-bar.industrial-grade {
+            background: #5e98d9;
+        }
+
+        .rarity-bar.mil-spec {
+            background: #4b69ff;
+        }
+
+        .rarity-bar.restricted {
+            background: #8847ff;
+        }
+
+        .rarity-bar.classified {
+            background: #d32ce6;
+        }
+
+        .rarity-bar.covert {
+            background: #eb4b4b;
         }
 
         .rarity-bar.extraordinary {
@@ -483,11 +514,10 @@
         <div class="main-nav-item" data-nav="store">STORE</div>
         <div class="main-nav-item" data-nav="news">NEWS</div>
         <div class="main-nav-item" data-nav="info">INFO</div>
-        <div class="nav-indicator"></div>
     </div>
 
     <!-- Sub Navigation -->
-    <div class="sub-nav">
+    <div class="sub-nav active" id="subNav">
         <div class="sub-nav-right">
             <div class="sort-wrapper">
                 <div class="sort-icon">
@@ -811,33 +841,17 @@
             }
         });
 
-        // Add click handlers for main navigation with sliding indicator
+        // Add click handlers for main navigation
         const mainNavItems = document.querySelectorAll('.main-nav-item');
-        const navIndicator = document.querySelector('.nav-indicator');
-
-        function updateNavIndicator() {
-            const activeItem = document.querySelector('.main-nav-item.active');
-            if (activeItem) {
-                const itemRect = activeItem.getBoundingClientRect();
-                const navRect = activeItem.parentElement.getBoundingClientRect();
-                navIndicator.style.width = `${itemRect.width}px`;
-                navIndicator.style.left = `${itemRect.left - navRect.left}px`;
-            }
-        }
-
-        // Initialize indicator position
-        updateNavIndicator();
-
-        // Update on window resize
-        window.addEventListener('resize', updateNavIndicator);
 
         // Tab switching functionality
+        const subNav = document.getElementById('subNav');
+        
         mainNavItems.forEach(item => {
             item.addEventListener('click', function() {
                 // Update active nav item
                 mainNavItems.forEach(i => i.classList.remove('active'));
                 this.classList.add('active');
-                updateNavIndicator();
 
                 // Switch tab content
                 const tabName = this.getAttribute('data-nav');
@@ -849,6 +863,13 @@
                 const targetTab = document.getElementById(tabName + 'Tab');
                 if (targetTab) {
                     targetTab.classList.add('active');
+                }
+
+                // Show sub-nav only on inventory tab
+                if (tabName === 'inventory') {
+                    subNav.classList.add('active');
+                } else {
+                    subNav.classList.remove('active');
                 }
             });
         });
