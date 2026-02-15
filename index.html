@@ -1,1 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 INVENTORY</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Stratum2', Arial, sans-serif;
+            background: linear-gradient(180deg, #2a2520 0%, #1a1612 100%);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Topographic background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-left {
+            display: none;
+        }
+
+        .nav-right {
+            display: none;
+        }
+
+        /* Main Navigation Tabs */
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            padding: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .main-nav-item {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .main-nav-item.active {
+            color: #5cb3e0;
+        }
+
+        /* Sliding underline indicator */
+        .nav-indicator {
+            position: absolute;
+            bottom: 0;
+            height: 2px;
+            background: #5cb3e0;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .main-nav-item:hover:not(.active) {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Sub Navigation */
+        .sub-nav {
+            display: flex;
+            gap: 5px;
+            padding: 20px 40px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .sub-nav-left {
+            display: none;
+        }
+
+        .sub-nav-item {
+            display: none;
+        }
+
+        .sub-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .sort-dropdown {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 2px;
+            font-size: 13px;
+            color: #fff;
+            cursor: pointer;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .sort-dropdown:hover {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sort-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sort-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 5px;
+            background: rgba(20, 18, 15, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            min-width: 200px;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .sort-menu.active {
+            display: block;
+        }
+
+        .sort-option {
+            padding: 12px 16px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sort-option:last-child {
+            border-bottom: none;
+        }
+
+        .sort-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .sort-option.active {
+            color: #5cb3e0;
+            background: rgba(92, 179, 224, 0.1);
+        }
+
+        /* Inventory Grid */
+        .inventory-container {
+            padding: 30px 40px;
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
+
+        .item-card {
+            aspect-ratio: 1;
+            background: linear-gradient(180deg, rgba(60, 55, 50, 0.4) 0%, rgba(40, 35, 30, 0.6) 50%, rgba(20, 18, 15, 0.8) 100%);
+            border: 1px solid rgba(0, 0, 0, 0.5);
+            border-radius: 0;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Rarity borders */
+        .item-card.consumer-grade {
+            border-bottom: 3px solid #b0c3d9;
+        }
+
+        .item-card.industrial-grade {
+            border-bottom: 3px solid #5e98d9;
+        }
+
+        .item-card.mil-spec {
+            border-bottom: 3px solid #4b69ff;
+        }
+
+        .item-card.restricted {
+            border-bottom: 3px solid #8847ff;
+        }
+
+        .item-card.classified {
+            border-bottom: 3px solid #d32ce6;
+        }
+
+        .item-card.covert {
+            border-bottom: 3px solid #eb4b4b;
+        }
+
+        .item-card.extraordinary {
+            border-bottom: 3px solid #e4ae39;
+        }
+
+        .item-badges {
+            display: flex;
+            gap: 4px;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            z-index: 2;
+        }
+
+        .badge {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .item-image-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .item-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+        }
+
+        .item-info {
+            margin-top: auto;
+        }
+
+        .item-name {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .item-type {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Modal/Inspection View */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 1400px;
+            height: 85vh;
+            background: linear-gradient(180deg, rgba(42, 37, 32, 0.95) 0%, rgba(26, 22, 18, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 30px 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .modal-weapon-rarity {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .modal-weapon-name {
+            font-size: 32px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .rarity-bar {
+            width: 200px;
+            height: 3px;
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        .rarity-bar.consumer-grade {
+            background: #b0c3d9;
+        }
+
+        .rarity-bar.extraordinary {
+            background: #e4ae39;
+        }
+
+        .modal-body {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
+        }
+
+        .weapon-display {
+            font-size: 200px;
+            animation: float 4s ease-in-out infinite;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.8));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-10deg); }
+            50% { transform: translateY(-15px) rotate(-8deg); }
+        }
+
+        .modal-footer {
+            padding: 30px 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+        }
+
+        .modal-close-btn {
+            padding: 14px 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 1200px) {
+            .inventory-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-nav {
+                gap: 20px;
+            }
+            
+            .inventory-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+    </div>
+
+    <!-- Main Navigation -->
+    <div class="main-nav">
+        <div class="main-nav-item active" data-nav="inventory">INVENTORY</div>
+        <div class="main-nav-item" data-nav="store">STORE</div>
+        <div class="main-nav-item" data-nav="news">NEWS</div>
+        <div class="main-nav-item" data-nav="info">INFO</div>
+        <div class="nav-indicator"></div>
+    </div>
+
+    <!-- Sub Navigation -->
+    <div class="sub-nav">
+        <div class="sub-nav-right">
+            <div class="sort-dropdown" id="sortDropdown">
+                <div class="sort-icon">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 5L8 10L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <span id="sortLabel">Sort: Newest</span>
+                <div class="sort-menu" id="sortMenu">
+                    <div class="sort-option active" data-sort="newest">Newest</div>
+                    <div class="sort-option" data-sort="rarity-down">Rarity (High to Low)</div>
+                    <div class="sort-option" data-sort="rarity-up">Rarity (Low to High)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Grid -->
+    <div class="inventory-container">
+        <div class="inventory-grid" id="inventoryGrid"></div>
+    </div>
+
+    <!-- Inspection Modal -->
+    <div class="modal-overlay" id="inspectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-weapon-rarity" id="modalRarity">CONSUMER GRADE</div>
+                <div class="modal-weapon-name" id="modalWeaponName">Default Knife</div>
+                <div class="rarity-bar consumer-grade" id="modalRarityBar"></div>
+            </div>
+            <div class="modal-body">
+                <div class="weapon-display" id="modalWeaponEmoji">🔪</div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-close-btn" id="closeModal">CLOSE</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default CS2 weapon inventory
+        const defaultInventory = [
+            // Pistols
+            { name: 'Glock-18', type: 'Pistol', rarity: 'consumer-grade', imageName: 'glock-18.webp' },
+            { name: 'P2000', type: 'Pistol', rarity: 'consumer-grade', imageName: 'p2000.webp' },
+            { name: 'USP-S', type: 'Pistol', rarity: 'consumer-grade', imageName: 'usp-s.webp' },
+            { name: 'P250', type: 'Pistol', rarity: 'consumer-grade', imageName: 'p250.webp' },
+            { name: 'Five-SeveN', type: 'Pistol', rarity: 'consumer-grade', imageName: 'five-seven.webp' },
+            { name: 'Tec-9', type: 'Pistol', rarity: 'consumer-grade', imageName: 'tec-9.webp' },
+            { name: 'CZ75-Auto', type: 'Pistol', rarity: 'consumer-grade', imageName: 'cz75-auto.webp' },
+            { name: 'Desert Eagle', type: 'Pistol', rarity: 'consumer-grade', imageName: 'desert-eagle.webp' },
+            { name: 'Dual Berettas', type: 'Pistol', rarity: 'consumer-grade', imageName: 'dual-berettas.webp' },
+            { name: 'R8 Revolver', type: 'Pistol', rarity: 'consumer-grade', imageName: 'r8-revolver.webp' },
+            
+            // SMGs
+            { name: 'MAC-10', type: 'SMG', rarity: 'consumer-grade', imageName: 'mac-10.webp' },
+            { name: 'MP9', type: 'SMG', rarity: 'consumer-grade', imageName: 'mp9.webp' },
+            { name: 'MP7', type: 'SMG', rarity: 'consumer-grade', imageName: 'mp7.webp' },
+            { name: 'MP5-SD', type: 'SMG', rarity: 'consumer-grade', imageName: 'mp5-sd.webp' },
+            { name: 'UMP-45', type: 'SMG', rarity: 'consumer-grade', imageName: 'ump-45.webp' },
+            { name: 'P90', type: 'SMG', rarity: 'consumer-grade', imageName: 'p90.webp' },
+            { name: 'PP-Bizon', type: 'SMG', rarity: 'consumer-grade', imageName: 'pp-bizon.webp' },
+            
+            // Rifles
+            { name: 'FAMAS', type: 'Rifle', rarity: 'consumer-grade', imageName: 'famas.webp' },
+            { name: 'Galil AR', type: 'Rifle', rarity: 'consumer-grade', imageName: 'galil-ar.webp' },
+            { name: 'AK-47', type: 'Rifle', rarity: 'consumer-grade', imageName: 'ak-47.webp' },
+            { name: 'M4A4', type: 'Rifle', rarity: 'consumer-grade', imageName: 'm4a4.webp' },
+            { name: 'M4A1-S', type: 'Rifle', rarity: 'consumer-grade', imageName: 'm4a1-s.webp' },
+            { name: 'SG 553', type: 'Rifle', rarity: 'consumer-grade', imageName: 'sg-553.webp' },
+            { name: 'AUG', type: 'Rifle', rarity: 'consumer-grade', imageName: 'aug.webp' },
+            
+            // Snipers
+            { name: 'SSG 08', type: 'Sniper Rifle', rarity: 'consumer-grade', imageName: 'ssg-08.webp' },
+            { name: 'AWP', type: 'Sniper Rifle', rarity: 'consumer-grade', imageName: 'awp.webp' },
+            { name: 'G3SG1', type: 'Sniper Rifle', rarity: 'consumer-grade', imageName: 'g3sg1.webp' },
+            { name: 'SCAR-20', type: 'Sniper Rifle', rarity: 'consumer-grade', imageName: 'scar-20.webp' },
+            
+            // Heavy
+            { name: 'Nova', type: 'Shotgun', rarity: 'consumer-grade', imageName: 'nova.webp' },
+            { name: 'XM1014', type: 'Shotgun', rarity: 'consumer-grade', imageName: 'xm1014.webp' },
+            { name: 'Sawed-Off', type: 'Shotgun', rarity: 'consumer-grade', imageName: 'sawed-off.webp' },
+            { name: 'MAG-7', type: 'Shotgun', rarity: 'consumer-grade', imageName: 'mag-7.webp' },
+            { name: 'M249', type: 'Machine Gun', rarity: 'consumer-grade', imageName: 'm249.webp' },
+            { name: 'Negev', type: 'Machine Gun', rarity: 'consumer-grade', imageName: 'negev.webp' },
+            
+            // Knife and Gloves (only one of each)
+            { name: 'Default Knife', type: 'Knife', rarity: 'consumer-grade', imageName: 'default-knife.webp' },
+            { name: 'Default Gloves', type: 'Gloves', rarity: 'consumer-grade', imageName: 'default-gloves.webp' },
+        ];
+
+        const inventoryGrid = document.getElementById('inventoryGrid');
+
+        let currentSort = 'newest';
+        let inventoryCards = [];
+
+        // Rarity order for sorting (lower number = higher rarity)
+        const rarityOrder = {
+            'extraordinary': 0,
+            'covert': 1,
+            'classified': 2,
+            'restricted': 3,
+            'mil-spec': 4,
+            'industrial-grade': 5,
+            'consumer-grade': 6
+        };
+
+        // Gun type hierarchy for HIGH TO LOW sorting
+        const gunTypeOrderHighToLow = {
+            'Knife': 0,
+            'Gloves': 1,
+            'Sniper Rifle': 2,
+            'Rifle': 3,
+            'Shotgun': 4,
+            'Machine Gun': 5,
+            'SMG': 6,
+            'Pistol': 7
+        };
+
+        // Gun type hierarchy for LOW TO HIGH sorting (reversed, pistols first)
+        const gunTypeOrderLowToHigh = {
+            'Pistol': 0,
+            'SMG': 1,
+            'Machine Gun': 2,
+            'Shotgun': 3,
+            'Rifle': 4,
+            'Sniper Rifle': 5,
+            'Knife': 6,
+            'Gloves': 7
+        };
+
+        // Render inventory items
+        defaultInventory.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = `item-card ${item.rarity}`;
+            
+            card.innerHTML = `
+                <div class="item-image-container">
+                    <img src="images/weapons/${item.imageName}" alt="${item.name}" class="item-image">
+                </div>
+                <div class="item-info">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-type">${item.type}</div>
+                </div>
+            `;
+            
+            // Add click handler to open modal
+            card.addEventListener('click', () => openInspectModal(item));
+            
+            // Store item data on card element
+            card.itemData = { ...item, originalIndex: index };
+            inventoryCards.push(card);
+            
+            inventoryGrid.appendChild(card);
+        });
+
+        // Sorting function
+        function sortInventory(sortType) {
+            currentSort = sortType;
+            
+            const sortedCards = [...inventoryCards].sort((a, b) => {
+                const itemA = a.itemData;
+                const itemB = b.itemData;
+                
+                if (sortType === 'newest') {
+                    return itemA.originalIndex - itemB.originalIndex;
+                }
+                
+                if (sortType === 'rarity-down') {
+                    // HIGH TO LOW: Gun type first (Knives/Gloves → Snipers → Rifles → Shotguns → SMGs → Pistols)
+                    const typeOrderA = gunTypeOrderHighToLow[itemA.type] ?? 999;
+                    const typeOrderB = gunTypeOrderHighToLow[itemB.type] ?? 999;
+                    
+                    if (typeOrderA !== typeOrderB) {
+                        return typeOrderA - typeOrderB;
+                    }
+                    
+                    // Within same gun type, sort by rarity (high to low)
+                    const rarityA = rarityOrder[itemA.rarity];
+                    const rarityB = rarityOrder[itemB.rarity];
+                    
+                    if (rarityA !== rarityB) {
+                        return rarityA - rarityB; // 0=extraordinary first
+                    }
+                    
+                    // Within same rarity and type, sort alphabetically
+                    return itemA.name.localeCompare(itemB.name);
+                }
+                
+                if (sortType === 'rarity-up') {
+                    // LOW TO HIGH: Gun type first (Pistols → SMGs → Machine Guns → Shotguns → Rifles → Snipers → Knives/Gloves)
+                    const typeOrderA = gunTypeOrderLowToHigh[itemA.type] ?? 999;
+                    const typeOrderB = gunTypeOrderLowToHigh[itemB.type] ?? 999;
+                    
+                    if (typeOrderA !== typeOrderB) {
+                        return typeOrderA - typeOrderB;
+                    }
+                    
+                    // Within same gun type, sort alphabetically
+                    return itemA.name.localeCompare(itemB.name);
+                }
+                
+                return 0;
+            });
+            
+            // Clear and re-append in sorted order
+            inventoryGrid.innerHTML = '';
+            sortedCards.forEach(card => inventoryGrid.appendChild(card));
+        }
+
+        // Sort dropdown functionality
+        const sortDropdown = document.getElementById('sortDropdown');
+        const sortMenu = document.getElementById('sortMenu');
+        const sortLabel = document.getElementById('sortLabel');
+
+        sortDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sortMenu.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            sortMenu.classList.remove('active');
+        });
+
+        // Sort option click handlers
+        document.querySelectorAll('.sort-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                const sortType = option.dataset.sort;
+                
+                // Update active state
+                document.querySelectorAll('.sort-option').forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                
+                // Update label
+                sortLabel.textContent = `Sort: ${option.textContent}`;
+                
+                // Sort inventory
+                sortInventory(sortType);
+                
+                // Close menu
+                sortMenu.classList.remove('active');
+            });
+        });
+
+        // Modal functionality
+        const modal = document.getElementById('inspectModal');
+        const closeBtn = document.getElementById('closeModal');
+
+        function openInspectModal(item) {
+            // Update modal content
+            const weaponName = item.name;
+            const rarityText = item.rarity.toUpperCase().replace('-', ' ');
+            
+            // Add stars only for extraordinary items
+            if (item.rarity === 'extraordinary') {
+                document.getElementById('modalWeaponName').textContent = `★ ${weaponName} ★`;
+                document.getElementById('modalRarity').textContent = `★ ${rarityText}`;
+            } else {
+                document.getElementById('modalWeaponName').textContent = weaponName;
+                document.getElementById('modalRarity').textContent = rarityText;
+            }
+            
+            // Update weapon image in modal
+            const modalDisplay = document.getElementById('modalWeaponEmoji');
+            modalDisplay.innerHTML = `<img src="images/weapons/${item.imageName}" alt="${item.name}" style="max-width: 80%; max-height: 80%; object-fit: contain;">`;
+            
+            // Update rarity bar color
+            const rarityBar = document.getElementById('modalRarityBar');
+            rarityBar.className = `rarity-bar ${item.rarity}`;
+            
+            // Show modal
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeInspectModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close button click
+        closeBtn.addEventListener('click', closeInspectModal);
+
+        // Click outside modal to close
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeInspectModal();
+            }
+        });
+
+        // ESC key to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeInspectModal();
+            }
+        });
+
+        // Add click handlers for main navigation with sliding indicator
+        const mainNavItems = document.querySelectorAll('.main-nav-item');
+        const navIndicator = document.querySelector('.nav-indicator');
+        
+        function updateNavIndicator() {
+            const activeItem = document.querySelector('.main-nav-item.active');
+            if (activeItem) {
+                const itemRect = activeItem.getBoundingClientRect();
+                const navRect = activeItem.parentElement.getBoundingClientRect();
+                
+                navIndicator.style.width = `${itemRect.width}px`;
+                navIndicator.style.left = `${itemRect.left - navRect.left}px`;
+            }
+        }
+        
+        // Initialize indicator position
+        updateNavIndicator();
+        
+        // Update on window resize
+        window.addEventListener('resize', updateNavIndicator);
+        
+        mainNavItems.forEach(item => {
+            item.addEventListener('click', function() {
+                mainNavItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                updateNavIndicator();
+            });
+        });
+    </script>
+</body>
+</html>
