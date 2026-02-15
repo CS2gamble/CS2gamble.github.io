@@ -43,14 +43,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .nav-left {
-            display: none;
-        }
-
-        .nav-right {
-            display: none;
-        }
-
         /* Main Navigation Tabs */
         .main-nav {
             display: flex;
@@ -101,47 +93,69 @@
             align-items: center;
         }
 
-        .sub-nav-left {
-            display: none;
-        }
-
-        .sub-nav-item {
-            display: none;
-        }
-
         .sub-nav-right {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
-        .sort-dropdown {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 8px 16px;
-            border-radius: 2px;
-            font-size: 13px;
-            color: #fff;
-            cursor: pointer;
-            min-width: 180px;
+        .sort-wrapper {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 15px;
+            position: relative;
+        }
+
+        .sort-dropdown {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #fff;
+            cursor: pointer;
+            min-width: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
             position: relative;
             transition: all 0.2s;
         }
 
         .sort-dropdown:hover {
-            background: rgba(0, 0, 0, 0.6);
-            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .sort-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
         }
 
         .sort-icon {
-            width: 16px;
-            height: 16px;
+            width: 24px;
+            height: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .sort-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .dropdown-arrow {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         .sort-menu {
@@ -247,23 +261,6 @@
             border-bottom: 3px solid #e4ae39;
         }
 
-        .item-badges {
-            display: flex;
-            gap: 4px;
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            z-index: 2;
-        }
-
-        .badge {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
         .item-image-container {
             flex: 1;
             display: flex;
@@ -320,8 +317,12 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         .modal-content {
@@ -394,8 +395,12 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(-10deg); }
-            50% { transform: translateY(-15px) rotate(-8deg); }
+            0%, 100% {
+                transform: translateY(0) rotate(-10deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(-8deg);
+            }
         }
 
         .modal-footer {
@@ -461,36 +466,10 @@
             .main-nav {
                 gap: 20px;
             }
-            
             .inventory-grid {
                 grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             }
         }
-        .sort-wrapper{
-    display:flex;
-    align-items:center;
-    gap:14px;
-}
-
-.sort-icon-outside{
-    width:22px;
-    height:22px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:rgba(255,255,255,0.8);
-    cursor:pointer;
-    transition:all 0.2s;
-}
-
-.sort-icon-outside:hover{
-    color:#fff;
-}
-
-.sort-icon-outside svg{
-    width:100%;
-    height:100%;
-}
     </style>
 </head>
 <body>
@@ -509,46 +488,38 @@
 
     <!-- Sub Navigation -->
     <div class="sub-nav">
-    <div class="sub-nav-right">
-        <div class="sort-wrapper">
-
-            <!-- SORT ICON OUTSIDE -->
-            <div class="sort-icon-outside" id="sortTrigger">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <!-- descending bars -->
-                    <line x1="9" y1="6" x2="20" y2="6" stroke-linecap="round"/>
-                    <line x1="9" y1="12" x2="17" y2="12" stroke-linecap="round"/>
-                    <line x1="9" y1="18" x2="14" y2="18" stroke-linecap="round"/>
-                    <!-- arrow -->
-                    <line x1="4" y1="4" x2="4" y2="18" stroke-linecap="round"/>
-                    <polyline points="1,15 4,18 7,15" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-
-            <div class="sort-dropdown" id="sortDropdown">
-                <span id="sortLabel">Newest</span>
-
-                <div class="dropdown-arrow">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <div class="sub-nav-right">
+            <div class="sort-wrapper">
+                <div class="sort-icon">
+                    <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Vertical line on left -->
+                        <rect x="4" y="2" width="2.5" height="16" fill="currentColor"/>
+                        <!-- Top horizontal line (longest) -->
+                        <rect x="7.5" y="2" width="9.5" height="2.5" fill="currentColor"/>
+                        <!-- Middle horizontal line (medium) -->
+                        <rect x="7.5" y="7" width="7" height="2.5" fill="currentColor"/>
+                        <!-- Bottom horizontal line (shortest) -->
+                        <rect x="7.5" y="12" width="4.5" height="2.5" fill="currentColor"/>
                     </svg>
                 </div>
-
-                <div class="sort-menu" id="sortMenu">
-                    <div class="sort-option active" data-sort="newest">Newest</div>
-                    <div class="sort-option" data-sort="rarity-down">Rarity (High to Low)</div>
-                    <div class="sort-option" data-sort="rarity-up">Rarity (Low to High)</div>
+                <div class="sort-dropdown" id="sortDropdown">
+                    <span id="sortLabel">Newest</span>
+                    <div class="dropdown-arrow">
+                        <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="sort-menu" id="sortMenu">
+                        <div class="sort-option active" data-sort="newest">Newest</div>
+                        <div class="sort-option" data-sort="rarity-down">Rarity (High to Low)</div>
+                        <div class="sort-option" data-sort="rarity-up">Rarity (Low to High)</div>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
-</div>
-
-    
 
     <!-- Tab Content Sections -->
-    
     <!-- Inventory Tab (Active by default) -->
     <div class="tab-content active" id="inventoryTab">
         <!-- Inventory Grid -->
@@ -642,7 +613,6 @@
         ];
 
         const inventoryGrid = document.getElementById('inventoryGrid');
-
         let currentSort = 'newest';
         let inventoryCards = [];
 
@@ -685,7 +655,6 @@
         defaultInventory.forEach((item, index) => {
             const card = document.createElement('div');
             card.className = `item-card ${item.rarity}`;
-            
             card.innerHTML = `
                 <div class="item-image-container">
                     <img src="images/weapons/${item.imageName}" alt="${item.name}" class="item-image">
@@ -695,66 +664,59 @@
                     <div class="item-type">${item.type}</div>
                 </div>
             `;
-            
+
             // Add click handler to open modal
             card.addEventListener('click', () => openInspectModal(item));
-            
+
             // Store item data on card element
             card.itemData = { ...item, originalIndex: index };
             inventoryCards.push(card);
-            
             inventoryGrid.appendChild(card);
         });
 
         // Sorting function
         function sortInventory(sortType) {
             currentSort = sortType;
-            
+
             const sortedCards = [...inventoryCards].sort((a, b) => {
                 const itemA = a.itemData;
                 const itemB = b.itemData;
-                
+
                 if (sortType === 'newest') {
                     return itemA.originalIndex - itemB.originalIndex;
                 }
-                
+
                 if (sortType === 'rarity-down') {
                     // HIGH TO LOW: Gun type first (Knives/Gloves → Snipers → Rifles → Shotguns → SMGs → Pistols)
                     const typeOrderA = gunTypeOrderHighToLow[itemA.type] ?? 999;
                     const typeOrderB = gunTypeOrderHighToLow[itemB.type] ?? 999;
-                    
                     if (typeOrderA !== typeOrderB) {
                         return typeOrderA - typeOrderB;
                     }
-                    
                     // Within same gun type, sort by rarity (high to low)
                     const rarityA = rarityOrder[itemA.rarity];
                     const rarityB = rarityOrder[itemB.rarity];
-                    
                     if (rarityA !== rarityB) {
                         return rarityA - rarityB; // 0=extraordinary first
                     }
-                    
                     // Within same rarity and type, sort alphabetically
                     return itemA.name.localeCompare(itemB.name);
                 }
-                
+
                 if (sortType === 'rarity-up') {
                     // LOW TO HIGH: Gun type first (Pistols → SMGs → Machine Guns → Shotguns → Rifles → Snipers → Knives/Gloves)
                     const typeOrderA = gunTypeOrderLowToHigh[itemA.type] ?? 999;
                     const typeOrderB = gunTypeOrderLowToHigh[itemB.type] ?? 999;
-                    
                     if (typeOrderA !== typeOrderB) {
                         return typeOrderA - typeOrderB;
                     }
-                    
                     // Within same gun type, sort alphabetically
                     return itemA.name.localeCompare(itemB.name);
                 }
-                
+
                 return 0;
             });
-            
+
             // Clear and re-append in sorted order
             inventoryGrid.innerHTML = '';
             sortedCards.forEach(card => inventoryGrid.appendChild(card));
@@ -764,16 +726,6 @@
         const sortDropdown = document.getElementById('sortDropdown');
         const sortMenu = document.getElementById('sortMenu');
         const sortLabel = document.getElementById('sortLabel');
-        const sortTrigger = document.getElementById('sortTrigger');
-
-function toggleSortMenu(e){
-    e.stopPropagation();
-    sortMenu.classList.toggle('active');
-}
-
-sortDropdown.addEventListener('click', toggleSortMenu);
-sortTrigger.addEventListener('click', toggleSortMenu);
-
 
         sortDropdown.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -789,19 +741,18 @@ sortTrigger.addEventListener('click', toggleSortMenu);
         document.querySelectorAll('.sort-option').forEach(option => {
             option.addEventListener('click', (e) => {
                 e.stopPropagation();
-                
                 const sortType = option.dataset.sort;
-                
+
                 // Update active state
                 document.querySelectorAll('.sort-option').forEach(opt => opt.classList.remove('active'));
                 option.classList.add('active');
-                
-                // Update label
-                sortLabel.textContent = `Sort: ${option.textContent}`;
-                
+
+                // Update label (without "Sort: " prefix)
+                sortLabel.textContent = option.textContent;
+
                 // Sort inventory
                 sortInventory(sortType);
-                
+
                 // Close menu
                 sortMenu.classList.remove('active');
             });
@@ -815,7 +766,7 @@ sortTrigger.addEventListener('click', toggleSortMenu);
             // Update modal content
             const weaponName = item.name;
             const rarityText = item.rarity.toUpperCase().replace('-', ' ');
-            
+
             // Add stars only for extraordinary items
             if (item.rarity === 'extraordinary') {
                 document.getElementById('modalWeaponName').textContent = `★ ${weaponName} ★`;
@@ -824,15 +775,15 @@ sortTrigger.addEventListener('click', toggleSortMenu);
                 document.getElementById('modalWeaponName').textContent = weaponName;
                 document.getElementById('modalRarity').textContent = rarityText;
             }
-            
+
             // Update weapon image in modal - centered
             const modalDisplay = document.getElementById('modalWeaponEmoji');
             modalDisplay.innerHTML = `<img src="images/weapons/${item.imageName}" alt="${item.name}" style="max-width: 70%; max-height: 70%; object-fit: contain; display: block; margin: auto;">`;
-            
+
             // Update rarity bar color
             const rarityBar = document.getElementById('modalRarityBar');
             rarityBar.className = `rarity-bar ${item.rarity}`;
-            
+
             // Show modal
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -863,24 +814,23 @@ sortTrigger.addEventListener('click', toggleSortMenu);
         // Add click handlers for main navigation with sliding indicator
         const mainNavItems = document.querySelectorAll('.main-nav-item');
         const navIndicator = document.querySelector('.nav-indicator');
-        
+
         function updateNavIndicator() {
             const activeItem = document.querySelector('.main-nav-item.active');
             if (activeItem) {
                 const itemRect = activeItem.getBoundingClientRect();
                 const navRect = activeItem.parentElement.getBoundingClientRect();
-                
                 navIndicator.style.width = `${itemRect.width}px`;
                 navIndicator.style.left = `${itemRect.left - navRect.left}px`;
             }
         }
-        
+
         // Initialize indicator position
         updateNavIndicator();
-        
+
         // Update on window resize
         window.addEventListener('resize', updateNavIndicator);
-        
+
         // Tab switching functionality
         mainNavItems.forEach(item => {
             item.addEventListener('click', function() {
@@ -888,13 +838,13 @@ sortTrigger.addEventListener('click', toggleSortMenu);
                 mainNavItems.forEach(i => i.classList.remove('active'));
                 this.classList.add('active');
                 updateNavIndicator();
-                
+
                 // Switch tab content
                 const tabName = this.getAttribute('data-nav');
                 document.querySelectorAll('.tab-content').forEach(tab => {
                     tab.classList.remove('active');
                 });
-                
+
                 // Show the selected tab
                 const targetTab = document.getElementById(tabName + 'Tab');
                 if (targetTab) {
