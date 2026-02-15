@@ -645,6 +645,7 @@
         ];
 
         const inventoryGrid = document.getElementById('inventoryGrid');
+        const sortLabel = document.getElementById('sortLabel');
         let currentSort = localStorage.getItem('sortPreference') || 'newest';
         let inventoryCards = [];
 
@@ -785,7 +786,6 @@
         // Sort dropdown functionality
         const sortDropdown = document.getElementById('sortDropdown');
         const sortMenu = document.getElementById('sortMenu');
-        const sortLabel = document.getElementById('sortLabel');
 
         sortDropdown.addEventListener('click', (e) => {
             e.stopPropagation();
