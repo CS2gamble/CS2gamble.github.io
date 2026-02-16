@@ -459,6 +459,88 @@
             border-color: rgba(255, 255, 255, 0.5);
         }
 
+        .modal-delete-btn {
+            padding: 14px 40px;
+            background: rgba(235, 75, 75, 0.2);
+            border: 1px solid rgba(235, 75, 75, 0.5);
+            color: #eb4b4b;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 10px;
+        }
+
+        .modal-delete-btn:hover {
+            background: rgba(235, 75, 75, 0.3);
+            border-color: rgba(235, 75, 75, 0.7);
+        }
+
+        /* Confirmation Dialog */
+        .confirm-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(180deg, rgba(42, 37, 32, 0.98) 0%, rgba(26, 22, 18, 0.98) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px 40px;
+            z-index: 2000;
+            min-width: 400px;
+            text-align: center;
+        }
+
+        .confirm-dialog.active {
+            display: block;
+        }
+
+        .confirm-dialog-text {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 25px;
+        }
+
+        .confirm-dialog-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .confirm-yes-btn {
+            padding: 12px 30px;
+            background: rgba(235, 75, 75, 0.2);
+            border: 1px solid rgba(235, 75, 75, 0.5);
+            color: #eb4b4b;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .confirm-yes-btn:hover {
+            background: rgba(235, 75, 75, 0.3);
+        }
+
+        .confirm-no-btn {
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .confirm-no-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         /* Tab Content Sections */
         .tab-content {
             display: none;
@@ -485,6 +567,74 @@
             padding-top: 200px;
             letter-spacing: 4px;
             text-transform: uppercase;
+        }
+
+        /* Store/Gambling Styles */
+        .store-container {
+            padding: 30px 40px;
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 320px);
+            gap: 15px;
+        }
+
+        .case-card {
+            width: 320px;
+            height: 320px;
+            background: linear-gradient(180deg, rgba(60, 55, 50, 0.4) 0%, rgba(40, 35, 30, 0.6) 50%, rgba(20, 18, 15, 0.8) 100%);
+            border: 1px solid rgba(0, 0, 0, 0.5);
+            border-bottom: 4.5px solid #e4ae39;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: visible;
+            margin-bottom: 30px;
+        }
+
+        .case-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .case-image-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .case-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+        }
+
+        .case-info {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            text-align: left;
+        }
+
+        .case-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 5px;
         }
 
         @media (max-width: 1200px) {
@@ -560,7 +710,42 @@
 
     <!-- Store Tab -->
     <div class="tab-content" id="storeTab">
-        <div class="coming-soon">Coming Soon</div>
+        <div class="store-container">
+            <div class="store-grid">
+                <div class="case-card" data-case-id="snakebite">
+                    <div class="case-image-container">
+                        <img src="images/snakebite.webp" alt="Snakebite Case" class="case-image">
+                    </div>
+                    <div class="case-info">
+                        <div class="case-name">Snakebite Case</div>
+                    </div>
+                </div>
+                <div class="case-card" data-case-id="case2">
+                    <div class="case-image-container">
+                        <img src="images/case2.webp" alt="Case 2" class="case-image">
+                    </div>
+                    <div class="case-info">
+                        <div class="case-name">Case 2</div>
+                    </div>
+                </div>
+                <div class="case-card" data-case-id="case3">
+                    <div class="case-image-container">
+                        <img src="images/case3.webp" alt="Case 3" class="case-image">
+                    </div>
+                    <div class="case-info">
+                        <div class="case-name">Case 3</div>
+                    </div>
+                </div>
+                <div class="case-card" data-case-id="case4">
+                    <div class="case-image-container">
+                        <img src="images/case4.webp" alt="Case 4" class="case-image">
+                    </div>
+                    <div class="case-info">
+                        <div class="case-name">Case 4</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- News Tab -->
@@ -585,12 +770,33 @@
                 <div class="weapon-display" id="modalWeaponEmoji">🔪</div>
             </div>
             <div class="modal-footer">
+                <button class="modal-delete-btn" id="deleteModal" style="display: none;">DELETE</button>
                 <button class="modal-close-btn" id="closeModal">CLOSE</button>
             </div>
         </div>
     </div>
 
+    <!-- Confirmation Dialog -->
+    <div class="confirm-dialog" id="confirmDialog">
+        <div class="confirm-dialog-text">Are you sure you want to delete this item?</div>
+        <div class="confirm-dialog-buttons">
+            <button class="confirm-yes-btn" id="confirmYes">YES</button>
+            <button class="confirm-no-btn" id="confirmNo">NO</button>
+        </div>
+    </div>
+
     <script>
+        // Available cases in the store
+        const availableCases = [
+            { id: 'snakebite', name: 'Snakebite Case', imageName: 'snakebite.webp' },
+            { id: 'case2', name: 'Case 2', imageName: 'case2.webp' },
+            { id: 'case3', name: 'Case 3', imageName: 'case3.webp' },
+            { id: 'case4', name: 'Case 4', imageName: 'case4.webp' }
+        ];
+
+        // Load user's purchased cases from localStorage
+        let userCases = JSON.parse(localStorage.getItem('userCases')) || [];
+
         // Default CS2 weapon inventory
         const defaultInventory = [
             // Pistols
@@ -662,14 +868,15 @@
 
         // Gun type hierarchy for HIGH TO LOW sorting
         const gunTypeOrderHighToLow = {
-            'Knife': 0,
-            'Gloves': 1,
-            'Sniper Rifle': 2,
-            'Rifle': 3,
-            'Shotgun': 4,
-            'Machine Gun': 5,
-            'SMG': 6,
-            'Pistol': 7
+            'Case': 0,
+            'Knife': 1,
+            'Gloves': 2,
+            'Sniper Rifle': 3,
+            'Rifle': 4,
+            'Shotgun': 5,
+            'Machine Gun': 6,
+            'SMG': 7,
+            'Pistol': 8
         };
 
         // Gun type hierarchy for LOW TO HIGH sorting (reversed, pistols first)
@@ -681,11 +888,34 @@
             'Rifle': 4,
             'Sniper Rifle': 5,
             'Knife': 6,
-            'Gloves': 7
+            'Gloves': 7,
+            'Case': 8
         };
 
         // Render inventory items
-        defaultInventory.forEach((item, index) => {
+        function renderInventory() {
+            inventoryGrid.innerHTML = '';
+            inventoryCards = [];
+            let index = 0;
+
+            // Render default inventory
+            defaultInventory.forEach((item) => {
+                const card = createInventoryCard(item, index, false);
+                inventoryCards.push(card);
+                inventoryGrid.appendChild(card);
+                index++;
+            });
+
+            // Render user's purchased cases
+            userCases.forEach((caseItem) => {
+                const card = createInventoryCard(caseItem, index, true);
+                inventoryCards.push(card);
+                inventoryGrid.appendChild(card);
+                index++;
+            });
+        }
+
+        function createInventoryCard(item, index, isDeletable) {
             const card = document.createElement('div');
             card.className = `item-card ${item.rarity}`;
             
@@ -710,25 +940,28 @@
             if (styles.length > 0) {
                 imageStyle = `style="${styles.join('; ')};"`;
             }
+
+            const imagePath = item.type === 'Case' ? `images/${item.imageName}` : `images/weapons/${item.imageName}`;
             
             card.innerHTML = `
                 <div class="item-image-container">
-                    <img src="images/weapons/${item.imageName}" alt="${item.name}" class="item-image" ${imageStyle}>
+                    <img src="${imagePath}" alt="${item.name}" class="item-image" ${imageStyle}>
                 </div>
                 <div class="item-info">
                     <div class="item-name">${item.name}</div>
-                    <div class="item-type">${item.type}</div>
+                    <div class="item-type">${item.type || ''}</div>
                 </div>
             `;
 
             // Add click handler to open modal
-            card.addEventListener('click', () => openInspectModal(item));
+            card.addEventListener('click', () => openInspectModal(item, isDeletable));
 
             // Store item data on card element
-            card.itemData = { ...item, originalIndex: index };
-            inventoryCards.push(card);
-            inventoryGrid.appendChild(card);
-        });
+            card.itemData = { ...item, originalIndex: index, isDeletable };
+            return card;
+        }
+
+        renderInventory();
 
         // Apply saved sort preference on page load
         if (currentSort !== 'newest') {
@@ -835,14 +1068,21 @@
         const modal = document.getElementById('inspectModal');
         const closeBtn = document.getElementById('closeModal');
 
-        function openInspectModal(item) {
+        let currentModalItem = null;
+
+        function openInspectModal(item, isDeletable = false) {
+            currentModalItem = item;
+
             // Update modal content
             const weaponName = item.name;
-            const rarityText = item.rarity.toUpperCase().replace('-', ' ');
+            const rarityText = (item.rarity || 'special').toUpperCase().replace('-', ' ');
 
-            // Add stars only for extraordinary items
+            // Add stars for extraordinary and covert items
             if (item.rarity === 'extraordinary') {
                 document.getElementById('modalWeaponName').textContent = `★ ${weaponName} ★`;
+                document.getElementById('modalRarity').textContent = `★ ${rarityText}`;
+            } else if (item.rarity === 'covert') {
+                document.getElementById('modalWeaponName').textContent = weaponName;
                 document.getElementById('modalRarity').textContent = `★ ${rarityText}`;
             } else {
                 document.getElementById('modalWeaponName').textContent = weaponName;
@@ -874,12 +1114,17 @@
                 modalStyles.push(`filter: brightness(${item.brightness})`);
             }
             
+            const imagePath = item.type === 'Case' ? `images/${item.imageName}` : `images/weapons/${item.imageName}`;
             const modalStyleStr = modalStyles.length > 0 ? modalStyles.join('; ') + ';' : '';
-            modalDisplay.innerHTML = `<img src="images/weapons/${item.imageName}" alt="${item.name}" style="max-width: 70%; max-height: 70%; object-fit: contain; display: block; margin: auto; ${modalStyleStr}">`;
+            modalDisplay.innerHTML = `<img src="${imagePath}" alt="${item.name}" style="max-width: 70%; max-height: 70%; object-fit: contain; display: block; margin: auto; ${modalStyleStr}">`;
 
             // Update rarity bar color
             const rarityBar = document.getElementById('modalRarityBar');
-            rarityBar.className = `rarity-bar ${item.rarity}`;
+            rarityBar.className = `rarity-bar ${item.rarity || 'extraordinary'}`;
+
+            // Show/hide delete button based on whether item is deletable
+            const deleteBtn = document.getElementById('deleteModal');
+            deleteBtn.style.display = isDeletable ? 'inline-block' : 'none';
 
             // Show modal
             modal.classList.add('active');
@@ -904,6 +1149,71 @@
         // ESC key to close
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeInspectModal();
+            }
+        });
+
+        // Case buying functionality
+        document.querySelectorAll('.case-card').forEach(caseCard => {
+            caseCard.addEventListener('click', function() {
+                const caseId = this.getAttribute('data-case-id');
+                const caseData = availableCases.find(c => c.id === caseId);
+                
+                if (caseData) {
+                    // Create a new case item for inventory
+                    const newCase = {
+                        id: Date.now(), // Unique ID for deletion
+                        name: caseData.name,
+                        type: 'Case',
+                        rarity: 'extraordinary',
+                        imageName: caseData.imageName
+                    };
+                    
+                    // Add to user's cases
+                    userCases.push(newCase);
+                    localStorage.setItem('userCases', JSON.stringify(userCases));
+                    
+                    // Re-render inventory
+                    renderInventory();
+                    
+                    // Re-apply current sort
+                    if (currentSort !== 'newest') {
+                        sortInventory(currentSort);
+                    }
+                }
+            });
+        });
+
+        // Delete button functionality
+        const deleteBtn = document.getElementById('deleteModal');
+        const confirmDialog = document.getElementById('confirmDialog');
+        const confirmYes = document.getElementById('confirmYes');
+        const confirmNo = document.getElementById('confirmNo');
+
+        deleteBtn.addEventListener('click', function() {
+            confirmDialog.classList.add('active');
+        });
+
+        confirmNo.addEventListener('click', function() {
+            confirmDialog.classList.remove('active');
+        });
+
+        confirmYes.addEventListener('click', function() {
+            if (currentModalItem && currentModalItem.id) {
+                // Remove from userCases
+                userCases = userCases.filter(c => c.id !== currentModalItem.id);
+                localStorage.setItem('userCases', JSON.stringify(userCases));
+                
+                // Re-render inventory
+                renderInventory();
+                
+                // Re-apply current sort
+                if (currentSort !== 'newest') {
+                    sortInventory(currentSort);
+                }
+                
+                // Close dialogs
+                confirmDialog.classList.remove('active');
                 closeInspectModal();
             }
         });
