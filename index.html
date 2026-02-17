@@ -335,16 +335,16 @@
             border-bottom: 4.5px solid #e4ae39;
         }
 
-        .item-card.case-grey {
-            border-bottom: 4.5px solid #8b8b8b;
-        }
-
         .item-image-container {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 10px;
+        }
+
+        .item-image-container.case-item {
+            padding: 2px;
         }
 
         .item-image {
@@ -470,10 +470,6 @@
 
         .rarity-bar.extraordinary {
             background: #e4ae39;
-        }
-
-        .rarity-bar.case-grey {
-            background: #8b8b8b;
         }
 
         .modal-body {
@@ -714,11 +710,18 @@
             justify-content: space-between;
         }
 
+        .case-top {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
         .case-name {
             font-size: 13px;
             font-weight: 700;
             color: #fff;
-            font-family: 'DIN 2014', 'DIN Bold', 'DIN Next LT Pro Bold', 'DIN', Arial, sans-serif; font-weight: 700;
+            font-family: 'DIN 2014', 'DIN Bold', 'DIN Next LT Pro Bold', 'DIN', Arial, sans-serif;
+            font-weight: 700;
             line-height: 1.3;
         }
 
@@ -727,7 +730,6 @@
             font-weight: 700;
             color: #5cb3e0;
             font-family: 'DIN 2014', 'DIN Bold', 'DIN Next LT Pro Bold', 'DIN', Arial, sans-serif;
-            margin: 4px 0;
         }
 
         .case-market-btn {
@@ -736,7 +738,8 @@
             justify-content: space-between;
             font-size: 11px;
             color: rgba(255, 255, 255, 0.6);
-            font-family: 'DIN 2014', 'DIN Bold', 'DIN Next LT Pro Bold', 'DIN', Arial, sans-serif; font-weight: 700;
+            font-family: 'DIN 2014', 'DIN Bold', 'DIN Next LT Pro Bold', 'DIN', Arial, sans-serif;
+            font-weight: 700;
             transition: color 0.2s;
             cursor: pointer;
         }
@@ -816,13 +819,9 @@
             <div class="sort-wrapper">
                 <div class="sort-icon">
                     <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Vertical line on left -->
                         <rect x="4" y="2" width="2.5" height="16" fill="currentColor"/>
-                        <!-- Top horizontal line (longest) -->
                         <rect x="7.5" y="2" width="9.5" height="2.5" fill="currentColor"/>
-                        <!-- Middle horizontal line (medium) -->
                         <rect x="7.5" y="7" width="7" height="2.5" fill="currentColor"/>
-                        <!-- Bottom horizontal line (shortest) -->
                         <rect x="7.5" y="12" width="4.5" height="2.5" fill="currentColor"/>
                     </svg>
                 </div>
@@ -846,7 +845,6 @@
     <!-- Tab Content Sections -->
     <!-- Inventory Tab (Active by default) -->
     <div class="tab-content active" id="inventoryTab">
-        <!-- Inventory Grid -->
         <div class="inventory-container">
             <div class="inventory-grid" id="inventoryGrid"></div>
         </div>
@@ -861,8 +859,10 @@
                         <img src="images/snakebite.webp" alt="Snakebite Case" class="case-image">
                     </div>
                     <div class="case-info">
-                        <div class="case-name">Snakebite Case</div>
-                        <div class="case-price">$2.50</div>
+                        <div class="case-top">
+                            <div class="case-name">Snakebite Case</div>
+                            <div class="case-price">$2.50</div>
+                        </div>
                         <div class="case-market-btn">
                             <span>View On Market</span>
                             <div class="info-icon">i</div>
@@ -924,6 +924,14 @@
         // Load user's purchased cases from localStorage
         let userCases = JSON.parse(localStorage.getItem('userCases')) || [];
 
+        // Migrate any old case-grey entries to consumer-grade
+        let migrated = false;
+        userCases = userCases.map(c => {
+            if (c.rarity === 'case-grey') { migrated = true; return { ...c, rarity: 'consumer-grade' }; }
+            return c;
+        });
+        if (migrated) localStorage.setItem('userCases', JSON.stringify(userCases));
+
         // Default CS2 weapon inventory
         const defaultInventory = [
             // Pistols
@@ -937,7 +945,7 @@
             { name: 'Desert Eagle', type: 'Pistol', rarity: 'consumer-grade', imageName: 'desert-eagle.webp' },
             { name: 'Dual Berettas', type: 'Pistol', rarity: 'consumer-grade', imageName: 'dual-berettas.webp' },
             { name: 'R8 Revolver', type: 'Pistol', rarity: 'consumer-grade', imageName: 'r8-revolver.webp' },
-            
+
             // SMGs
             { name: 'MAC-10', type: 'SMG', rarity: 'consumer-grade', imageName: 'mac-10.webp' },
             { name: 'MP9', type: 'SMG', rarity: 'consumer-grade', imageName: 'mp9.webp' },
@@ -946,7 +954,7 @@
             { name: 'UMP-45', type: 'SMG', rarity: 'consumer-grade', imageName: 'ump-45.webp' },
             { name: 'P90', type: 'SMG', rarity: 'consumer-grade', imageName: 'p90.webp' },
             { name: 'PP-Bizon', type: 'SMG', rarity: 'consumer-grade', imageName: 'pp-bizon.webp' },
-            
+
             // Rifles
             { name: 'FAMAS', type: 'Rifle', rarity: 'consumer-grade', imageName: 'famas.webp' },
             { name: 'Galil AR', type: 'Rifle', rarity: 'consumer-grade', imageName: 'galil-ar.webp' },
@@ -955,13 +963,13 @@
             { name: 'M4A1-S', type: 'Rifle', rarity: 'consumer-grade', imageName: 'm4a1-s.webp' },
             { name: 'SG 553', type: 'Rifle', rarity: 'consumer-grade', imageName: 'sg-553.webp' },
             { name: 'AUG', type: 'Rifle', rarity: 'consumer-grade', imageName: 'aug.webp' },
-            
+
             // Snipers
             { name: 'SSG 08', type: 'Sniper Rifle', rarity: 'consumer-grade', imageName: 'ssg-08.webp' },
             { name: 'AWP', type: 'Sniper Rifle', rarity: 'consumer-grade', imageName: 'awp.webp' },
             { name: 'G3SG1', type: 'Sniper Rifle', rarity: 'consumer-grade', imageName: 'g3sg1.webp' },
             { name: 'SCAR-20', type: 'Sniper Rifle', rarity: 'consumer-grade', imageName: 'scar-20.webp' },
-            
+
             // Heavy
             { name: 'Nova', type: 'Shotgun', rarity: 'consumer-grade', imageName: 'nova.webp' },
             { name: 'XM1014', type: 'Shotgun', rarity: 'consumer-grade', imageName: 'xm1014.webp' },
@@ -969,7 +977,7 @@
             { name: 'MAG-7', type: 'Shotgun', rarity: 'consumer-grade', imageName: 'mag-7.webp' },
             { name: 'M249', type: 'Machine Gun', rarity: 'consumer-grade', imageName: 'm249.webp' },
             { name: 'Negev', type: 'Machine Gun', rarity: 'consumer-grade', imageName: 'negev.webp' },
-            
+
             // Knife and Gloves
             { name: 'Knife', type: 'Knife', rarity: 'consumer-grade', imageName: 'knifet.webp', brightness: 0.5 },
             { name: 'Knife', type: 'Knife', rarity: 'consumer-grade', imageName: 'knifect.webp', brightness: 0.5 },
@@ -1045,10 +1053,10 @@
         function createInventoryCard(item, index, isDeletable) {
             const card = document.createElement('div');
             card.className = `item-card ${item.rarity}`;
-            
+
             let imageStyle = '';
             const styles = [];
-            
+
             if (item.imageScale || item.offsetX || item.offsetY) {
                 const transforms = [];
                 if (item.imageScale) transforms.push(`scale(${item.imageScale})`);
@@ -1059,19 +1067,20 @@
                 }
                 styles.push(`transform: ${transforms.join(' ')}`);
             }
-            
+
             if (item.brightness) {
                 styles.push(`filter: brightness(${item.brightness})`);
             }
-            
+
             if (styles.length > 0) {
                 imageStyle = `style="${styles.join('; ')};"`;
             }
 
-            const imagePath = item.type === 'Case' ? `images/${item.imageName}` : `images/weapons/${item.imageName}`;
-            
+            const isCase = item.type === 'Case';
+            const imagePath = isCase ? `images/${item.imageName}` : `images/weapons/${item.imageName}`;
+
             card.innerHTML = `
-                <div class="item-image-container">
+                <div class="item-image-container${isCase ? ' case-item' : ''}">
                     <img src="${imagePath}" alt="${item.name}" class="item-image" ${imageStyle}>
                 </div>
                 <div class="item-info">
@@ -1093,7 +1102,7 @@
         // Apply saved sort preference on page load
         if (currentSort !== 'newest') {
             sortInventory(currentSort);
-            
+
             // Update the dropdown UI to match saved preference
             document.querySelectorAll('.sort-option').forEach(opt => {
                 if (opt.dataset.sort === currentSort) {
@@ -1118,30 +1127,25 @@
                 }
 
                 if (sortType === 'rarity-down') {
-                    // HIGH TO LOW: Gun type first (Knives/Gloves → Snipers → Rifles → Shotguns → SMGs → Pistols)
                     const typeOrderA = gunTypeOrderHighToLow[itemA.type] ?? 999;
                     const typeOrderB = gunTypeOrderHighToLow[itemB.type] ?? 999;
                     if (typeOrderA !== typeOrderB) {
                         return typeOrderA - typeOrderB;
                     }
-                    // Within same gun type, sort by rarity (high to low)
                     const rarityA = rarityOrder[itemA.rarity];
                     const rarityB = rarityOrder[itemB.rarity];
                     if (rarityA !== rarityB) {
-                        return rarityA - rarityB; // 0=extraordinary first
+                        return rarityA - rarityB;
                     }
-                    // Within same rarity and type, sort alphabetically
                     return itemA.name.localeCompare(itemB.name);
                 }
 
                 if (sortType === 'rarity-up') {
-                    // LOW TO HIGH: Gun type first (Pistols → SMGs → Machine Guns → Shotguns → Rifles → Snipers → Knives/Gloves)
                     const typeOrderA = gunTypeOrderLowToHigh[itemA.type] ?? 999;
                     const typeOrderB = gunTypeOrderLowToHigh[itemB.type] ?? 999;
                     if (typeOrderA !== typeOrderB) {
                         return typeOrderA - typeOrderB;
                     }
-                    // Within same gun type, sort alphabetically
                     return itemA.name.localeCompare(itemB.name);
                 }
 
@@ -1177,7 +1181,7 @@
                 document.querySelectorAll('.sort-option').forEach(opt => opt.classList.remove('active'));
                 option.classList.add('active');
 
-                // Update label (without "Sort: " prefix)
+                // Update label
                 sortLabel.textContent = option.textContent;
 
                 // Sort inventory
@@ -1202,26 +1206,24 @@
 
             // Update modal content
             const weaponName = item.name;
-            const rarityText = (item.rarity || 'special').toUpperCase().replace('-', ' ');
+            const rarityText = (item.rarity || 'special').toUpperCase().replace(/-/g, ' ');
 
-            // Add stars for extraordinary and covert items
             if (item.rarity === 'extraordinary') {
                 document.getElementById('modalWeaponName').textContent = `★ ${weaponName} ★`;
-                document.getElementById('modalRarity').textContent = `★ ${rarityText}`;
+                document.getElementById('modalRarity').textContent = `★ ${rarityText} ★`;
             } else if (item.rarity === 'covert') {
                 document.getElementById('modalWeaponName').textContent = weaponName;
-                document.getElementById('modalRarity').textContent = `★ ${rarityText}`;
+                document.getElementById('modalRarity').textContent = `★ ${rarityText} ★`;
             } else {
                 document.getElementById('modalWeaponName').textContent = weaponName;
                 document.getElementById('modalRarity').textContent = rarityText;
             }
 
-            // Update weapon image in modal - centered
+            // Update weapon image in modal
             const modalDisplay = document.getElementById('modalWeaponEmoji');
-            // Make knives and gloves 2x bigger in modal
             const modalStyles = [];
             const transforms = [];
-            
+
             if (item.type === 'Knife' || item.type === 'Gloves') {
                 transforms.push('scale(2)');
             } else if (item.imageScale) {
@@ -1232,24 +1234,26 @@
                 const y = item.offsetY || 0;
                 transforms.push(`translate(${x}px, ${y}px)`);
             }
-            
+
             if (transforms.length > 0) {
                 modalStyles.push(`transform: ${transforms.join(' ')}`);
             }
-            
+
             if (item.brightness) {
                 modalStyles.push(`filter: brightness(${item.brightness})`);
             }
-            
-            const imagePath = item.type === 'Case' ? `images/${item.imageName}` : `images/weapons/${item.imageName}`;
+
+            const isCase = item.type === 'Case';
+            const imagePath = isCase ? `images/${item.imageName}` : `images/weapons/${item.imageName}`;
             const modalStyleStr = modalStyles.length > 0 ? modalStyles.join('; ') + ';' : '';
-            modalDisplay.innerHTML = `<img src="${imagePath}" alt="${item.name}" style="max-width: 70%; max-height: 70%; object-fit: contain; display: block; margin: auto; ${modalStyleStr}">`;
+            const modalSize = isCase ? '90%' : '70%';
+            modalDisplay.innerHTML = `<img src="${imagePath}" alt="${item.name}" style="max-width: ${modalSize}; max-height: ${modalSize}; object-fit: contain; display: block; margin: auto; ${modalStyleStr}">`;
 
             // Update rarity bar color
             const rarityBar = document.getElementById('modalRarityBar');
             rarityBar.className = `rarity-bar ${item.rarity || 'extraordinary'}`;
 
-            // Show/hide delete button based on whether item is deletable
+            // Show/hide delete button
             const deleteBtn = document.getElementById('deleteModal');
             deleteBtn.style.display = isDeletable ? 'flex' : 'none';
 
@@ -1284,29 +1288,27 @@
         function extractDominantColor(imgElement, callback) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            
+
             const img = new Image();
             img.crossOrigin = 'Anonymous';
             img.src = imgElement.src;
-            
+
             img.onload = function() {
                 canvas.width = img.width;
                 canvas.height = img.height;
                 ctx.drawImage(img, 0, 0);
-                
+
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 const data = imageData.data;
-                
+
                 let r = 0, g = 0, b = 0, count = 0;
-                
-                // Sample pixels and calculate average (skip very dark pixels)
+
                 for (let i = 0; i < data.length; i += 4) {
                     const red = data[i];
                     const green = data[i + 1];
                     const blue = data[i + 2];
                     const alpha = data[i + 3];
-                    
-                    // Skip transparent and very dark pixels
+
                     if (alpha > 50 && (red + green + blue) > 100) {
                         r += red;
                         g += green;
@@ -1314,19 +1316,19 @@
                         count++;
                     }
                 }
-                
+
                 if (count > 0) {
                     r = Math.floor(r / count);
                     g = Math.floor(g / count);
                     b = Math.floor(b / count);
                     callback(`rgba(${r}, ${g}, ${b}, 0.35)`);
                 } else {
-                    callback('rgba(220, 140, 60, 0.35)'); // Default orange
+                    callback('rgba(220, 140, 60, 0.35)');
                 }
             };
-            
+
             img.onerror = function() {
-                callback('rgba(220, 140, 60, 0.35)'); // Default orange on error
+                callback('rgba(220, 140, 60, 0.35)');
             };
         }
 
@@ -1345,25 +1347,21 @@
             caseCard.addEventListener('click', function() {
                 const caseId = this.getAttribute('data-case-id');
                 const caseData = availableCases.find(c => c.id === caseId);
-                
+
                 if (caseData) {
-                    // Create a new case item for inventory
                     const newCase = {
-                        id: Date.now(), // Unique ID for deletion
+                        id: Date.now(),
                         name: caseData.name,
                         type: 'Case',
-                        rarity: 'case-grey',
+                        rarity: 'consumer-grade',
                         imageName: caseData.imageName
                     };
-                    
-                    // Add to user's cases
+
                     userCases.push(newCase);
                     localStorage.setItem('userCases', JSON.stringify(userCases));
-                    
-                    // Re-render inventory
+
                     renderInventory();
-                    
-                    // Re-apply current sort
+
                     if (currentSort !== 'newest') {
                         sortInventory(currentSort);
                     }
@@ -1387,49 +1385,39 @@
 
         confirmYes.addEventListener('click', function() {
             if (currentModalItem && currentModalItem.id) {
-                // Remove from userCases
                 userCases = userCases.filter(c => c.id !== currentModalItem.id);
                 localStorage.setItem('userCases', JSON.stringify(userCases));
-                
-                // Re-render inventory
+
                 renderInventory();
-                
-                // Re-apply current sort
+
                 if (currentSort !== 'newest') {
                     sortInventory(currentSort);
                 }
-                
-                // Close dialogs
+
                 confirmDialog.classList.remove('active');
                 closeInspectModal();
             }
         });
 
-        // Add click handlers for main navigation
-        const mainNavItems = document.querySelectorAll('.main-nav-item');
-
         // Tab switching functionality
+        const mainNavItems = document.querySelectorAll('.main-nav-item');
         const subNav = document.getElementById('subNav');
-        
+
         mainNavItems.forEach(item => {
             item.addEventListener('click', function() {
-                // Update active nav item
                 mainNavItems.forEach(i => i.classList.remove('active'));
                 this.classList.add('active');
 
-                // Switch tab content
                 const tabName = this.getAttribute('data-nav');
                 document.querySelectorAll('.tab-content').forEach(tab => {
                     tab.classList.remove('active');
                 });
 
-                // Show the selected tab
                 const targetTab = document.getElementById(tabName + 'Tab');
                 if (targetTab) {
                     targetTab.classList.add('active');
                 }
 
-                // Show sub-nav only on inventory tab
                 if (tabName === 'inventory') {
                     subNav.classList.add('active');
                 } else {
