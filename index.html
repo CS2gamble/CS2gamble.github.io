@@ -1038,6 +1038,226 @@
             background: rgba(76, 175, 80, 0.3);
             border-color: rgba(76, 175, 80, 0.7);
         }
+
+        /* Case Details Modal */
+        .case-details-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 3000;
+            animation: fadeIn 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .case-details-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .case-details-content {
+            width: 90%;
+            max-width: 1200px;
+            background: linear-gradient(180deg, rgba(42, 37, 32, 0.95) 0%, rgba(26, 22, 18, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+
+        .case-details-header {
+            padding: 30px 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .case-details-image {
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at center, rgba(220, 140, 60, 0.35) 0%, transparent 70%);
+            border-radius: 4px;
+        }
+
+        .case-details-image img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+        }
+
+        .case-details-info {
+            flex: 1;
+        }
+
+        .case-details-name {
+            font-size: 36px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .case-details-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #5cb3e0;
+            margin-bottom: 15px;
+        }
+
+        .case-details-buy-btn {
+            padding: 12px 30px;
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+            color: #4caf50;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+
+        .case-details-buy-btn:hover {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: rgba(76, 175, 80, 0.7);
+        }
+
+        .case-details-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 40px;
+        }
+
+        .case-details-section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .case-details-items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .case-details-item {
+            background: linear-gradient(180deg, rgba(60, 55, 50, 0.4) 0%, rgba(40, 35, 30, 0.6) 50%, rgba(20, 18, 15, 0.8) 100%);
+            border: 1px solid rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .case-details-item:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .case-details-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .case-details-item.mil-spec::after { background: #4b69ff; }
+        .case-details-item.restricted::after { background: #8847ff; }
+        .case-details-item.classified::after { background: #d32ce6; }
+        .case-details-item.covert::after { background: #eb4b4b; }
+        .case-details-item.extraordinary::after { background: #e4ae39; }
+
+        .case-details-item-image {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .case-details-item-image img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+        }
+
+        .case-details-item-name {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .case-details-footer {
+            padding: 20px 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+        }
+
+        .case-details-close-btn {
+            padding: 14px 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .case-details-close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .rarity-group {
+            margin-bottom: 25px;
+        }
+
+        .rarity-group-header {
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            padding-left: 5px;
+        }
+
+        .rarity-group-header.mil-spec { color: #4b69ff; }
+        .rarity-group-header.restricted { color: #8847ff; }
+        .rarity-group-header.classified { color: #d32ce6; }
+        .rarity-group-header.covert { color: #eb4b4b; }
+        .rarity-group-header.extraordinary { color: #e4ae39; }
     </style>
 </head>
 <body>
@@ -1199,6 +1419,29 @@
             <div class="win-reveal-buttons">
                 <button class="win-reveal-btn" id="winCloseBtn">CLOSE</button>
                 <button class="win-reveal-btn primary" id="winOpenAnotherBtn">OPEN ANOTHER</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Case Details Modal -->
+    <div class="case-details-overlay" id="caseDetailsOverlay">
+        <div class="case-details-content">
+            <div class="case-details-header">
+                <div class="case-details-image" id="caseDetailsImage">
+                    <img src="" alt="">
+                </div>
+                <div class="case-details-info">
+                    <div class="case-details-name" id="caseDetailsName">Snakebite Case</div>
+                    <div class="case-details-price" id="caseDetailsPrice">$2.50</div>
+                    <button class="case-details-buy-btn" id="caseDetailsBuyBtn">BUY CASE</button>
+                </div>
+            </div>
+            <div class="case-details-body">
+                <div class="case-details-section-title">CASE CONTENTS</div>
+                <div id="caseDetailsItemsContainer"></div>
+            </div>
+            <div class="case-details-footer">
+                <button class="case-details-close-btn" id="caseDetailsCloseBtn">CLOSE</button>
             </div>
         </div>
     </div>
@@ -1633,30 +1876,151 @@
             }
         });
 
-        // Case buying functionality
-        document.querySelectorAll('.case-card').forEach(caseCard => {
-            caseCard.addEventListener('click', function() {
-                const caseId = this.getAttribute('data-case-id');
-                const caseData = availableCases.find(c => c.id === caseId);
+        // Case details modal
+        function showCaseDetails(caseId) {
+            const caseData = availableCases.find(c => c.id === caseId);
+            if (!caseData) return;
 
-                if (caseData) {
-                    const newCase = {
-                        id: Date.now(),
-                        name: caseData.name,
-                        type: 'Case',
-                        rarity: 'consumer-grade',
-                        imageName: caseData.imageName
-                    };
+            const overlay = document.getElementById('caseDetailsOverlay');
+            const caseImage = document.getElementById('caseDetailsImage');
+            const caseName = document.getElementById('caseDetailsName');
+            const casePrice = document.getElementById('caseDetailsPrice');
+            const itemsContainer = document.getElementById('caseDetailsItemsContainer');
 
-                    userCases.push(newCase);
-                    localStorage.setItem('userCases', JSON.stringify(userCases));
+            // Set case info
+            caseImage.innerHTML = `<img src="images/${caseData.imageName}" alt="${caseData.name}">`;
+            caseName.textContent = caseData.name;
+            casePrice.textContent = '$2.50';
 
-                    renderInventory();
+            // Get loot pool
+            const lootPool = caseLootPools[caseId] || caseLootPools['snakebite'];
 
-                    if (currentSort !== 'newest') {
-                        sortInventory(currentSort);
-                    }
+            // Group items by rarity
+            const itemsByRarity = {
+                'extraordinary': [],
+                'covert': [],
+                'classified': [],
+                'restricted': [],
+                'mil-spec': []
+            };
+
+            lootPool.forEach(item => {
+                if (!itemsByRarity[item.rarity].some(i => i.name === item.name)) {
+                    itemsByRarity[item.rarity].push(item);
                 }
+            });
+
+            // Render items by rarity
+            itemsContainer.innerHTML = '';
+            
+            const rarityNames = {
+                'extraordinary': '★ EXTRAORDINARY (RARE SPECIAL ITEMS) ★',
+                'covert': 'COVERT',
+                'classified': 'CLASSIFIED',
+                'restricted': 'RESTRICTED',
+                'mil-spec': 'MIL-SPEC'
+            };
+
+            Object.keys(itemsByRarity).forEach(rarity => {
+                const items = itemsByRarity[rarity];
+                if (items.length === 0) return;
+
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'rarity-group';
+
+                const headerDiv = document.createElement('div');
+                headerDiv.className = `rarity-group-header ${rarity}`;
+                headerDiv.textContent = rarityNames[rarity];
+                groupDiv.appendChild(headerDiv);
+
+                const gridDiv = document.createElement('div');
+                gridDiv.className = 'case-details-items-grid';
+
+                items.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = `case-details-item ${rarity}`;
+
+                    let imageStyle = '';
+                    if (item.brightness) {
+                        imageStyle = `style="filter: brightness(${item.brightness})"`;
+                    }
+
+                    const imagePath = `images/weapons/${item.imageName}`;
+
+                    itemDiv.innerHTML = `
+                        <div class="case-details-item-image">
+                            <img src="${imagePath}" alt="${item.name}" ${imageStyle}>
+                        </div>
+                        <div class="case-details-item-name">${item.name}</div>
+                    `;
+
+                    gridDiv.appendChild(itemDiv);
+                });
+
+                groupDiv.appendChild(gridDiv);
+                itemsContainer.appendChild(groupDiv);
+            });
+
+            overlay.classList.add('active');
+
+            // Buy button handler
+            document.getElementById('caseDetailsBuyBtn').onclick = () => {
+                buyCase(caseId);
+                overlay.classList.remove('active');
+            };
+        }
+
+        // Buy case function
+        function buyCase(caseId) {
+            const caseData = availableCases.find(c => c.id === caseId);
+            if (caseData) {
+                const newCase = {
+                    id: Date.now(),
+                    name: caseData.name,
+                    type: 'Case',
+                    rarity: 'consumer-grade',
+                    imageName: caseData.imageName
+                };
+
+                userCases.push(newCase);
+                localStorage.setItem('userCases', JSON.stringify(userCases));
+
+                renderInventory();
+
+                if (currentSort !== 'newest') {
+                    sortInventory(currentSort);
+                }
+            }
+        }
+
+        // Close case details
+        document.getElementById('caseDetailsCloseBtn').addEventListener('click', () => {
+            document.getElementById('caseDetailsOverlay').classList.remove('active');
+        });
+
+        // Click outside to close
+        document.getElementById('caseDetailsOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+            }
+        });
+
+        // Case card click handlers
+        document.querySelectorAll('.case-card').forEach(caseCard => {
+            const caseId = caseCard.getAttribute('data-case-id');
+            
+            // Market button shows details
+            const marketBtn = caseCard.querySelector('.case-market-btn');
+            marketBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showCaseDetails(caseId);
+            });
+
+            // Card click buys the case
+            caseCard.addEventListener('click', function(e) {
+                // Don't trigger if clicking the market button
+                if (e.target.closest('.case-market-btn')) return;
+                buyCase(caseId);
             });
         });
 
